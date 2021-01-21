@@ -5,6 +5,9 @@
 #include "Shader.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
 
 void processInput(GLFWwindow* window);
 float vertices[] = {
@@ -100,7 +103,14 @@ int main() {
 	}
 	stbi_image_free(data2);
 
+	//calculate our transformation
+	//trans = glm::scale(trans, glm::vec3(2.0f, 2.0f, 2.0f));
+
 	while (!glfwWindowShouldClose(window)) {
+		//trans = glm::translate(trans, glm::vec3(-0.01f, 0, 0));
+		glm::mat4 trans;
+		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+		trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 		// input
 		processInput(window);
 
@@ -118,6 +128,7 @@ int main() {
 		myShader->use();
 		glUniform1i(glGetUniformLocation(myShader->ID, "ourTexture"), 0);
 		glUniform1i(glGetUniformLocation(myShader->ID, "ourFace"), 1);
+		glUniformMatrix4fv(glGetUniformLocation(myShader->ID, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		//check and call events and setup the buffers
 		glfwSwapBuffers(window);
