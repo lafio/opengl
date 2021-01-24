@@ -8,8 +8,17 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
+#include "Camera.h"
 
 void processInput(GLFWwindow* window);
+void mouse_callback(GLFWwindow* window, double xPos, double yPos);
+float lastX;
+float lastY;
+bool firstCalMouse = true;
+//Instance Camera class
+//Camera camera(glm::vec3(0, 0, 3.0f), glm::vec3(0, -1.0f, 0), glm::vec3(0, 1.0f, 0)); //世界坐标系下：(相机位置，目标位置，世界up）
+Camera camera(glm::vec3(0, 0, 3.0f), glm::radians(0.0f), glm::radians(-180.0f), glm::vec3(0, 1.0f, 0));
+
 //float vertices[] = {
 //	//     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
 //		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
@@ -90,6 +99,8 @@ int main() {
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCursorPosCallback(window, mouse_callback);
 
 	//Init GLEW
 	glewExperimental = true;
@@ -158,6 +169,8 @@ int main() {
 	}
 	stbi_image_free(data2);
 
+	glm::mat4 viewMat;
+	//viewMat = camera.getViewMatrix();
 	//calculate our transformation
 	//trans = glm::scale(trans, glm::vec3(2.0f, 2.0f, 2.0f));
 	
@@ -169,8 +182,8 @@ int main() {
 		//trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 		glm::mat4 modelMat;
 		modelMat = glm::rotate(modelMat, (float)glfwGetTime()*glm::radians(-55.0f), glm::vec3(1.0f, 1.0f, 0));
-		glm::mat4 viewMat;
-		viewMat = glm::translate(viewMat, glm::vec3(0, 0, -3.0f));
+		//glm::mat4 viewMat;
+		//viewMat = glm::translate(viewMat, glm::vec3(0, 0, -3.0f));
 		glm::mat4 projMat;
 		projMat = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 		// input
@@ -187,6 +200,7 @@ int main() {
 		glBindVertexArray(VAO);
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
+		viewMat = camera.getViewMatrix();
 		for (int i = 0; i < 10; i++)
 		{
 			glm::mat4 modelMat2;
@@ -207,6 +221,7 @@ int main() {
 		//check and call events and setup the buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+		camera.UpdateCameraPos();
 	}
 
 	glfwTerminate();
@@ -217,4 +232,29 @@ void processInput(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		camera.speedZ = 1.0f;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		camera.speedZ = -1.0f;
+	}
+	else {
+		camera.speedZ = 0;
+	}
+}
+
+void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
+	if (firstCalMouse == true) {
+		lastX = xPos;
+		lastY = yPos;
+		firstCalMouse = false;
+	}
+	float deltaX, deltaY;
+	deltaX = xPos - lastX;
+	deltaY = yPos - lastY;
+
+	lastX = xPos;
+	lastY = yPos;
+
+	camera.ProcessMouseMovement(deltaX, deltaY);
 }
