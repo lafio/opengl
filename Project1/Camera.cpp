@@ -43,5 +43,5 @@ void Camera::ProcessMouseMovement(float deltaX, float deltaY) {
 }
 
 void Camera::UpdateCameraPos() {
-	Position += Forward*speedZ*senseZ;
+	Position += Forward * speedZ * senseZ + Right * speedX * 0.1f + Up * speedY * 0.1f;
 }

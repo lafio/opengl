@@ -12,7 +12,7 @@ uniform vec3 lightColor;
 out vec4 FragColor;
 void main(){
 	vec3 lightDir = normalize(lightPos - FragPos);
-	vec3 diffuse = dot(lightDir,Normal) * lightColor ;
+	vec3 diffuse = max(dot(lightDir,Normal),0) * lightColor ;
 	//FragColor = vec4(objColor * ambientColor,1.0);
 	FragColor = vec4((ambientColor + diffuse) * objColor,1.0);
 }

@@ -92,6 +92,24 @@ void processInput(GLFWwindow* window) {
 	else {
 		camera.speedZ = 0;
 	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		camera.speedX = 1.0f;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		camera.speedX = -1.0f;
+	}
+	else {
+		camera.speedX = 0;
+	}
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+		camera.speedY = 1.0f;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+		camera.speedY = -1.0f;
+	}
+	else {
+		camera.speedY = 0;
+	}
 }
 
 void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
