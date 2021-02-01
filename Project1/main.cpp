@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "Shader.h"
+#include "Material.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include <glm.hpp>
@@ -182,6 +183,13 @@ int main() {
 	#pragma endregion
 
 	Shader* myShader = new Shader("vertexSource.vert", "fragmentSource.frag");
+
+	Material* myMaterial = new Material(myShader,
+		glm::vec3(1.0f,1.0f,1.0f), //diffuse
+		glm::vec3(0, 1.0f, 0),  //specular
+		glm::vec3(1.0f, 1.0f, 1.0f),  //ambient
+		32.0f);  //shininess
+
 	#pragma region Init and load Models to VAO,VBO
 	unsigned int VAO;
 	glGenVertexArrays(1, &VAO);
@@ -235,7 +243,7 @@ int main() {
 		{
 			//set model matrix
 			modelMat = glm::translate(glm::mat4(1.0f), cubePositions[i]);
-			modelMat = glm::rotate(modelMat, (float)glfwGetTime() * glm::radians(-55.0f)*(i+1), glm::vec3(1.0f, 1.0f, 0));
+			//modelMat = glm::rotate(modelMat, (float)glfwGetTime() * glm::radians(-55.0f)*(i+1), glm::vec3(1.0f, 1.0f, 0));
 
 			//set view and projection matrices here
 
@@ -258,10 +266,10 @@ int main() {
 			glUniform3f(glGetUniformLocation(myShader->ID, "lightColor"), 1.0f, 1.0f, 1.0f);
 			glUniform3f(glGetUniformLocation(myShader->ID, "cameraPos"), camera.Position.x, camera.Position.y, camera.Position.z);
 
-			glUniform3f(glGetUniformLocation(myShader->ID, "material.amient"), 1.0f, 1.0f, 1.0f);
-			glUniform3f(glGetUniformLocation(myShader->ID, "material.diffuse"), 1.0f, 1.0f, 1.0f);
-			glUniform3f(glGetUniformLocation(myShader->ID, "material.specular"), 1.0f, 1.0f, 1.0f);
-			glUniform1f(glGetUniformLocation(myShader->ID, "material.shininess"), 32.0f);
+			myMaterial->shader->SetUniform3f("material.ambient", myMaterial->ambient);
+			myMaterial->shader->SetUniform3f("material.diffuse", myMaterial->diffuse);
+			myMaterial->shader->SetUniform3f("material.specular", myMaterial->specular);
+			myMaterial->shader->SetUniform1f("material.shininess", myMaterial->shininess);
 
 			//set model
 			glBindVertexArray(VAO);
