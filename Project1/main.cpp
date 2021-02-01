@@ -258,6 +258,11 @@ int main() {
 			glUniform3f(glGetUniformLocation(myShader->ID, "lightColor"), 1.0f, 1.0f, 1.0f);
 			glUniform3f(glGetUniformLocation(myShader->ID, "cameraPos"), camera.Position.x, camera.Position.y, camera.Position.z);
 
+			glUniform3f(glGetUniformLocation(myShader->ID, "material.amient"), 1.0f, 1.0f, 1.0f);
+			glUniform3f(glGetUniformLocation(myShader->ID, "material.diffuse"), 1.0f, 1.0f, 1.0f);
+			glUniform3f(glGetUniformLocation(myShader->ID, "material.specular"), 1.0f, 1.0f, 1.0f);
+			glUniform1f(glGetUniformLocation(myShader->ID, "material.shininess"), 32.0f);
+
 			//set model
 			glBindVertexArray(VAO);
 			//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
