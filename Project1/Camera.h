@@ -16,9 +16,9 @@ public:
 	glm::vec3 Worldup;
 	float Pitch;
 	float Yaw;
-	float senseX = 0.005f;
-	float senseY = 0.005f;
-	float senseZ = 0.1f;
+	float senseX = 0.001f;
+	float senseY = 0.001f;
+	float senseZ = 0.01f;
 	float speedX = 0;
 	float speedY = 0;
 	float speedZ = 0;

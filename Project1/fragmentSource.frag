@@ -1,10 +1,11 @@
 #version 330 core
 in vec3 FragPos;
 in vec3 Normal;
+in vec2 TexCoord;
 
 struct Material{
 	vec3 ambient;
-	vec3 diffuse;
+	sampler2D diffuse;
 	vec3 specular;
 	float shininess;
 };
@@ -31,10 +32,11 @@ void main(){
 	//FragColor = vec4(objColor * ambientColor,1.0);
 
 	//diffuse
-	vec3 diffuse = material.diffuse * max(dot(lightDir,Normal),0) * lightColor;
+	vec3 diffuse = texture(material.diffuse,TexCoord).rgb * max(dot(lightDir,Normal),0) * lightColor;
+	//vec3 diffuse = texture(material.diffuse,TexCoord).rgb;
 
 	//ambient
-	vec3 ambient = material.ambient * ambientColor;
+	vec3 ambient = texture(material.diffuse,TexCoord).rgb * ambientColor;
 
 	FragColor = vec4((ambient + diffuse + specular) * objColor,1.0);
 }
