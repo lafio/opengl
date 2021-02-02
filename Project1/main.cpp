@@ -11,6 +11,7 @@
 #include <gtc/type_ptr.hpp>
 #include "Camera.h"
 #include "LightDirectional.h"
+#include "LightPoint.h"
 
 #pragma region Camera Declare
 //Instance Camera class
@@ -19,7 +20,7 @@ Camera camera(glm::vec3(0, 0, 3.0f), glm::radians(0.0f), glm::radians(-180.0f), 
 #pragma endregion
 
 #pragma region Light Declare
-LightDirectional light(glm::vec3(10.0f,10.0f,-5.0f),glm::vec3(glm::radians(45.0f),0,0));
+LightPoint light(glm::vec3(0.0f,0.0f,-1.0f),glm::vec3(glm::radians(45.0f),0,0));
 #pragma endregion
 
 #pragma region Model Data
@@ -267,11 +268,14 @@ int main() {
 			glUniformMatrix4fv(glGetUniformLocation(myShader->ID, "viewMat"), 1, GL_FALSE, glm::value_ptr(viewMat));
 			glUniformMatrix4fv(glGetUniformLocation(myShader->ID, "projMat"), 1, GL_FALSE, glm::value_ptr(projMat));
 			glUniform3f(glGetUniformLocation(myShader->ID, "objColor"), 1.0f, 1.0f, 1.0f);
-			glUniform3f(glGetUniformLocation(myShader->ID, "ambientColor"), 0.3f, 0.3f, 0.3f);
-			//glUniform3f(glGetUniformLocation(myShader->ID, "lightPos"), light.position.x,light.position.y,light.position.z);
+			glUniform3f(glGetUniformLocation(myShader->ID, "ambientColor"), 0.1f, 0.1f, 0.1f);
+			glUniform3f(glGetUniformLocation(myShader->ID, "lightPos"), light.position.x,light.position.y,light.position.z); //µã¹âÔ´
 			glUniform3f(glGetUniformLocation(myShader->ID, "lightColor"), light.color.x,light.color.y,light.color.z);
-			glUniform3f(glGetUniformLocation(myShader->ID, "lightDir"), light.direction.x, light.direction.y, light.direction.z);
+			glUniform3f(glGetUniformLocation(myShader->ID, "lightDirUniform"), light.direction.x, light.direction.y, light.direction.z);
 			glUniform3f(glGetUniformLocation(myShader->ID, "cameraPos"), camera.Position.x, camera.Position.y, camera.Position.z);
+			glUniform1f(glGetUniformLocation(myShader->ID, "lightp.constant"), light.constant);
+			glUniform1f(glGetUniformLocation(myShader->ID, "lightp.linear"), light.linear);
+			glUniform1f(glGetUniformLocation(myShader->ID, "lightp.quadratic"), light.quadratic);
 
 			myMaterial->shader->SetUniform3f("material.ambient", myMaterial->ambient);
 			//myMaterial->shader->SetUniform3f("material.diffuse", myMaterial->diffuse);
