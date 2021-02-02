@@ -186,8 +186,8 @@ int main() {
 	Shader* myShader = new Shader("vertexSource.vert", "fragmentSource.frag");
 
 	Material* myMaterial = new Material(myShader,
-		LoadImageToGPU("container2.png",GL_RGBA,GL_RGBA,0), //diffuse
-		glm::vec3(1.0f, 1.0f, 1.0f),  //specular
+		LoadImageToGPU("container2.png",GL_RGBA,GL_RGBA,Shader::DIFFUSE), //diffuse
+		LoadImageToGPU("container2_specular.png", GL_RGBA, GL_RGBA, Shader::SPECULAR),  //specular
 		glm::vec3(1.0f, 1.0f, 1.0f),  //ambient
 		32.0f);  //shininess
 
@@ -251,10 +251,10 @@ int main() {
 			//set material -> shader program
 			myShader->use();
 			//set material -> textures
-			//glActiveTexture(GL_TEXTURE0);
-			//glBindTexture(GL_TEXTURE_2D, TextBufferA);
-			//glActiveTexture(GL_TEXTURE0);
-			//glBindTexture(GL_TEXTURE_2D, TextBufferB);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, myMaterial->diffuse);
+			glActiveTexture(GL_TEXTURE0 + 1);
+			glBindTexture(GL_TEXTURE_2D, myMaterial->specular);
 			//set material -> uniform
 			//glUniform1i(glGetUniformLocation(myShader->ID, "ourTexture"), 0);
 			//glUniform1i(glGetUniformLocation(myShader->ID, "ourFace"), 1);
@@ -269,9 +269,11 @@ int main() {
 
 			myMaterial->shader->SetUniform3f("material.ambient", myMaterial->ambient);
 			//myMaterial->shader->SetUniform3f("material.diffuse", myMaterial->diffuse);
-			myMaterial->shader->SetUniform3f("material.specular", myMaterial->specular);
+			//myMaterial->shader->SetUniform3f("material.specular", myMaterial->specular);
+			myMaterial->shader->SetUniform1i("material.diffuse", Shader::DIFFUSE);
+			myMaterial->shader->SetUniform1i("material.specular", Shader::SPECULAR);
 			myMaterial->shader->SetUniform1f("material.shininess", myMaterial->shininess);
-			myMaterial->shader->SetUniform1i("material.diffuse", 0);
+			
 
 			//set model
 			glBindVertexArray(VAO);
