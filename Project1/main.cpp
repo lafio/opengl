@@ -12,6 +12,7 @@
 #include "Camera.h"
 #include "LightDirectional.h"
 #include "LightPoint.h"
+#include "LightSpot.h"
 
 #pragma region Camera Declare
 //Instance Camera class
@@ -20,7 +21,7 @@ Camera camera(glm::vec3(0, 0, 3.0f), glm::radians(0.0f), glm::radians(-180.0f), 
 #pragma endregion
 
 #pragma region Light Declare
-LightPoint light(glm::vec3(0.0f,0.0f,-1.0f),glm::vec3(glm::radians(45.0f),0,0));
+LightSpot light(glm::vec3(0.0f,5.0f,0.0f),glm::vec3(glm::radians(90.0f),0,0));
 #pragma endregion
 
 #pragma region Model Data
@@ -273,9 +274,12 @@ int main() {
 			glUniform3f(glGetUniformLocation(myShader->ID, "lightColor"), light.color.x,light.color.y,light.color.z);
 			glUniform3f(glGetUniformLocation(myShader->ID, "lightDirUniform"), light.direction.x, light.direction.y, light.direction.z);
 			glUniform3f(glGetUniformLocation(myShader->ID, "cameraPos"), camera.Position.x, camera.Position.y, camera.Position.z);
-			glUniform1f(glGetUniformLocation(myShader->ID, "lightp.constant"), light.constant);
-			glUniform1f(glGetUniformLocation(myShader->ID, "lightp.linear"), light.linear);
-			glUniform1f(glGetUniformLocation(myShader->ID, "lightp.quadratic"), light.quadratic);
+			glUniform1f(glGetUniformLocation(myShader->ID, "lights.cosPhyInner"), light.cosPhyInner);
+			glUniform1f(glGetUniformLocation(myShader->ID, "lights.cosPhyOutter"), light.cosPhyOutter);
+
+			//glUniform1f(glGetUniformLocation(myShader->ID, "lightp.constant"), light.constant);
+			//glUniform1f(glGetUniformLocation(myShader->ID, "lightp.linear"), light.linear);
+			//glUniform1f(glGetUniformLocation(myShader->ID, "lightp.quadratic"), light.quadratic);
 
 			myMaterial->shader->SetUniform3f("material.ambient", myMaterial->ambient);
 			//myMaterial->shader->SetUniform3f("material.diffuse", myMaterial->diffuse);

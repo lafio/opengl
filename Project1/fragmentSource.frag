@@ -14,9 +14,14 @@ struct LightPoint{
 	float linear;
 	float quadratic;
 };
+struct LightSpot{
+	float cosPhyInner;
+	float cosPhyOutter;
+};
 
 uniform Material material;
 uniform LightPoint lightp;
+uniform LightSpot lights;
 //uniform sampler2D ourTexture;
 //uniform sampler2D ourFace;
 uniform vec3 objColor;
@@ -48,5 +53,20 @@ void main(){
 	//ambient
 	vec3 ambient = texture(material.diffuse,TexCoord).rgb * ambientColor;
 
-	FragColor = vec4((ambient + (diffuse + specular) * attenuation) * objColor,1.0);
+	float cosTheta = dot(normalize(FragPos - lightPos), -1 * lightDirUniform);
+
+	float spotRatio;
+	if(cosTheta > lights.cosPhyInner){
+		//inside
+		spotRatio = 1.0f;
+	}
+	else if(cosTheta > lights.cosPhyOutter){
+		//middle
+		spotRatio = 1.0f - pow((cosTheta - lights.cosPhyInner) / (lights.cosPhyOutter - lights.cosPhyInner),2);
+	}
+	else{
+		//outside
+		spotRatio = 0;
+	}
+	FragColor = vec4((ambient + (diffuse + specular) * spotRatio) * objColor,1.0);
 }
