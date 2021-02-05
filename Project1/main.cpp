@@ -13,6 +13,7 @@
 #include "LightDirectional.h"
 #include "LightPoint.h"
 #include "LightSpot.h"
+#include "Mesh.h"
 
 #pragma region Camera Declare
 //Instance Camera class
@@ -205,26 +206,27 @@ int main() {
 		32.0f);  //shininess
 
 	#pragma region Init and load Models to VAO,VBO
-	unsigned int VAO;
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-
-	unsigned int VBO;
-	glGenBuffers(1,&VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	//unsigned int EBO;
-	//glGenBuffers(1, &EBO);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(6, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(6);
-	glVertexAttribPointer(7, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(7);
-	glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(8);
+	Mesh cube(vertices);
+	//unsigned int VAO;
+	//glGenVertexArrays(1, &VAO);
+	//glBindVertexArray(VAO);
+	//
+	//unsigned int VBO;
+	//glGenBuffers(1,&VBO);
+	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	//
+	////unsigned int EBO;
+	////glGenBuffers(1, &EBO);
+	////glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	////glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	//
+	//glVertexAttribPointer(6, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	//glEnableVertexAttribArray(6);
+	//glVertexAttribPointer(7, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	//glEnableVertexAttribArray(7);
+	//glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	//glEnableVertexAttribArray(8);
 	//glVertexAttribPointer(9, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	//glEnableVertexAttribArray(9);
 	#pragma endregion
@@ -264,10 +266,10 @@ int main() {
 			//set material -> shader program
 			myShader->use();
 			//set material -> textures
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, myMaterial->diffuse);
-			glActiveTexture(GL_TEXTURE0 + 1);
-			glBindTexture(GL_TEXTURE_2D, myMaterial->specular);
+			//glActiveTexture(GL_TEXTURE0);
+			//glBindTexture(GL_TEXTURE_2D, myMaterial->diffuse);
+			//glActiveTexture(GL_TEXTURE0 + 1);
+			//glBindTexture(GL_TEXTURE_2D, myMaterial->specular);
 			//set material -> uniform
 			//glUniform1i(glGetUniformLocation(myShader->ID, "ourTexture"), 0);
 			//glUniform1i(glGetUniformLocation(myShader->ID, "ourFace"), 1);
@@ -328,11 +330,12 @@ int main() {
 			
 
 			//set model
-			glBindVertexArray(VAO);
+			//glBindVertexArray(VAO);
 			//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
 			//drawcall
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+			//glDrawArrays(GL_TRIANGLES, 0, 36);
+			cube.Draw(myMaterial->shader);
 		}
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
