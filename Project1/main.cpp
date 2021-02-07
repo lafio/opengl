@@ -14,7 +14,6 @@
 #include "LightPoint.h"
 #include "LightSpot.h"
 #include "Mesh.h"
-#include "imgui.h"
 
 #pragma region Camera Declare
 //Instance Camera class
